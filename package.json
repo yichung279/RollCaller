@@ -2,7 +2,7 @@
   "name": "RollCaller",
   "version": "1.0.0",
   "scripts": {
-    "app": "parcel app/index.pug",
+    "app": "parcel app/index.pug app/scanner.pug app/qr-scanner-worker.min.js",
     "back": "parcel build --public-url ./ app/scanner.pug",
     "build": "parcel build --public-url ./ app/index.pug",
     "ser": "nodemon ser.js --watch ser.js"

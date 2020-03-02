@@ -1,11 +1,32 @@
 <template lang="pug">
 #app.container
+  video#qr-video
 </template>
 
 <script>
 import 'semantic-ui-offline/semantic.min.css'
+import QrScanner from './qr-scanner.min.js'
+QrScanner.WORKER_PATH = './qr-scanner-worker.min.js'
 
 export default {
+
+  mounted(){
+    const video = document.getElementById('qr-video');
+
+    const scanner = new QrScanner(video, content => this.addContent(content));
+    scanner.start();
+  },
+
+	data(){return{
+    table: "",
+	}},
+
+  methods: {
+    addContent(content) {
+      console.log(content)
+    }
+  }
+
 }
 </script>
 
