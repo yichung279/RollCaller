@@ -1,0 +1,26 @@
+{
+  "name": "RollCaller",
+  "version": "1.0.0",
+  "scripts": {
+    "app": "parcel app/index.pug",
+    "back": "parcel build --public-url ./ app/scanner.pug",
+    "build": "parcel build --public-url ./ app/index.pug",
+    "ser": "nodemon ser.js --watch ser.js"
+  },
+  "main": "index.js",
+  "repository": "git@github.com:yichung279/RollCaller.git",
+  "author": "yiz <ql3895619@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "parcel": "^1.12.4",
+    "semantic-ui-offline": "^2.4.1-1",
+    "vue": "^2.6.11",
+    "vue-qrcode-component": "^2.1.1"
+  },
+  "devDependencies": {
+    "@vue/component-compiler-utils": "^3.1.1",
+    "pug": "^2.0.4",
+    "sass": "^1.26.2",
+    "vue-template-compiler": "^2.6.11"
+  }
+}
