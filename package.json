@@ -2,7 +2,7 @@
   "name": "RollCaller",
   "version": "1.0.0",
   "scripts": {
-    "app": "parcel app/index.pug app/scanner.pug",
+    "app": "parcel app/index.pug",
     "back": "parcel build --public-url ./ app/scanner.pug",
     "build": "parcel build --public-url ./ app/index.pug",
     "ser": "nodemon ser.js --watch ser.js"
@@ -12,11 +12,9 @@
   "author": "yiz <ql3895619@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "instascan": "^1.0.0",
     "parcel": "^1.12.4",
     "semantic-ui-offline": "^2.4.1-1",
     "vue": "^2.6.11",
-    "vue-hot-reload-api": "^2.3.4",
     "vue-qrcode-component": "^2.1.1"
   },
   "devDependencies": {
