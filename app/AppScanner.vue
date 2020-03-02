@@ -18,12 +18,26 @@ export default {
   },
 
 	data(){return{
-    table: "",
+    table: {},
 	}},
 
   methods: {
     addContent(content) {
-      console.log(content)
+      // remove utf8-bom
+			if (content.charCodeAt(0) === 0xFEFF) {
+				content = content.substr(1);
+			}
+
+      let student = content.split('/')
+
+      console.log(student)
+      if(student[0]!='qr-check')
+        return
+
+      if(this.table[student[1]]==undefined){
+        this.table[student[1]]={"name": student[2]}
+        console.log(this.table)
+      }
     }
   }
 

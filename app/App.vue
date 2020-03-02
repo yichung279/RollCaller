@@ -32,7 +32,9 @@ export default {
   }},
 
   computed: {
-    qrcode_content() {return`\{"id":"${this.id}","name":"${this.name}"\}`}
+    qrcode_content() {
+      return `qr-check/${this.id}/${this.name}`
+    }
   },
 
 }
