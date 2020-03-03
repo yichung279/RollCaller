@@ -14,16 +14,17 @@
         .ui.submit.button(@click='addStudent(id, name)') Submit
 
   #table.scroll.item
-    table.ui.celled.table
+    table.ui.celled.table.selectable
       thead
         tr
           th(v-for='header in headers') {{ header }}
       tbody
-        tr(v-for='student in table')
+        tr(v-for='(student, idx) of table',@click='selectStudent(idx)')
           td(v-for='content in student') {{ content }}
 
   .item.button-container
-    button.ui.button.large(@click='cleanTable') 清除檔案
+    button.ui.button.large(@click='clearTable') 清除檔案
+    button.ui.button.large(@click='clearStudent') 清除欄位
     button.ui.button.large(@click='saveFile') 儲存檔案
 
 </template>
@@ -55,6 +56,7 @@ export default {
     headers: ['Name', 'Id', 'Time'],
     students: {},
     table: [],
+    selectedStudent: null,
     scannerStatus: "未發現 QRCode",
     timer: null,
 	}},
@@ -79,6 +81,8 @@ export default {
     },
 
     addStudent(id, name){
+      this.id = ""
+      this.name = ""
       let timeString = new Date().toLocaleTimeString()
 
       if(this.students[id]!=undefined){
@@ -102,10 +106,33 @@ export default {
       }, wait)
     },
 
-    cleanTable(){
+    selectStudent(idx){
+      this.selectedStudent = idx
+      let tBody = document.getElementsByTagName('tbody')[0].children
+
+      for(let i=0; i< tBody.length;i++){
+        tBody.item(i).style.backgroundColor = 'white'
+      }
+
+      tBody.item(idx).style.backgroundColor = 'whitesmoke'
+    },
+
+    clearTable(){
       this.students = {}
       this.table = []
       localStorage.removeItem('studentTable')
+    },
+
+    clearStudent(){
+      if(this.selectedStudent==null)
+        return
+
+      let idx = this.selectedStudent
+      let id = this.table[idx][1]
+
+      delete this.students[id]
+      this.table.splice(idx, 1)
+      localStorage.studentTable = JSON.stringify(this.table)
     },
 
     saveFile(){
