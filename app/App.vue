@@ -33,7 +33,7 @@ export default {
 
   computed: {
     qrcode_content() {
-      return `qr-check/${this.id}/${this.name}`
+      return `qr-check/@/${this.id}/@/${this.name}`
     }
   },
 

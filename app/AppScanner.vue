@@ -1,6 +1,19 @@
 <template lang="pug">
 #app.container
-  video#qr-video
+  video#qr-video.item(width='100%')
+
+  #table.scroll.item
+    table.ui.celled.table
+      thead
+        tr
+          th(width='50%') Name
+          th(width='50%') Id
+      tbody
+        tr(v-for='student in table')
+          td(v-for='content in student') {{ content }}
+
+  button.ui.button.massive.item 產生檔案
+
 </template>
 
 <script>
@@ -15,10 +28,13 @@ export default {
 
     const scanner = new QrScanner(video, content => this.addContent(content));
     scanner.start();
+
+    document.getElementById('table').style.width = video.offsetWidth + 'px'
   },
 
 	data(){return{
-    table: {},
+    students: {},
+    table: [['a','b'],['a','b'],['a','b'],['a','b'],['a','b'],['a','b'],['a','b'],['a','b'],['a','b'],['a','b'],['a','b'],['a','b'],['a','b'],['a','b'],['a','b'],['a','b'],['a','b'],['a','b'],['a','b'],['a','b'],['a','b'],['a','b'],['a','b'],['a','b'],['a','b'],['a','b'],['a','b'],['a','b']],
 	}},
 
   methods: {
@@ -28,15 +44,14 @@ export default {
 				content = content.substr(1);
 			}
 
-      let student = content.split('/')
+      let inputs = content.split('/@/')
 
-      console.log(student)
-      if(student[0]!='qr-check')
+      if(inputs[0]!='qr-check')
         return
 
-      if(this.table[student[1]]==undefined){
-        this.table[student[1]]={"name": student[2]}
-        console.log(this.table)
+      if(this.students[inputs[1]]==undefined){
+        this.students[inputs[1]]={"name": inputs[2]}
+        this.table.push([inputs[1], inputs[2]])
       }
     }
   }
@@ -52,13 +67,19 @@ body,#app
 
 <style lang="sass" scoped>
 .container
-  padding: 5vh
+  padding: 3vh
   display: flex
   align-items: center
   flex-direction: column
 
-</style>
+.item
+  margin: 2em
+  max-width: 600px
 
+.scroll
+  overflow: scroll
+
+</style>
 <!--
   vi:et:sw=2:ts=2
 -->
