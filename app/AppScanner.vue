@@ -11,7 +11,7 @@
         tr(v-for='student in table')
           td(v-for='content in student') {{ content }}
 
-  button.ui.button.massive.item(@click='saveFile') 儲存檔案
+  button.ui.button.huge.item(@click='saveFile') 下載檔案
 
 </template>
 
@@ -33,7 +33,7 @@ export default {
   },
 
 	data(){return{
-    headers: ['Id', 'Name', 'Time'],
+    headers: ['Name', 'Id', 'Time'],
     students: {},
     table: [],
 	}},
@@ -54,7 +54,7 @@ export default {
         this.students[inputs[1]]={"name": inputs[2]}
         let d = new Date()
         let timeString = d.toLocaleTimeString()
-        this.table.push([inputs[1], inputs[2], timeString])
+        this.table.push([inputs[2], inputs[1], timeString])
       }
     },
 
@@ -100,8 +100,8 @@ body,#app
   flex-direction: column
 
 .item
-  margin: 2em
-  max-width: 600px
+  margin: 1em
+  max-width: 400px
 
 .scroll
   overflow: scroll
