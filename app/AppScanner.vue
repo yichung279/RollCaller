@@ -9,7 +9,7 @@
           th(v-for='header in headers') {{ header }}
       tbody
         tr(v-for='student in table')
-          td(v-for='content in student') {{ content }}
+          td(v-for='content in student') {{ content.substring(0, 15) }}
 
   .item.button-container
     button.ui.button.massive(@click='cleanTable') 清除檔案
