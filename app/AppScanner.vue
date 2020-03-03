@@ -6,18 +6,18 @@
     table.ui.celled.table
       thead
         tr
-          th(width='50%') Name
-          th(width='50%') Id
+          th(v-for='header in headers') {{ header }}
       tbody
         tr(v-for='student in table')
           td(v-for='content in student') {{ content }}
 
-  button.ui.button.massive.item 產生檔案
+  button.ui.button.massive.item(@click='saveFile') 儲存檔案
 
 </template>
 
 <script>
 import 'semantic-ui-offline/semantic.min.css'
+import FileSaver from 'file-saver'
 import QrScanner from './qr-scanner.min.js'
 QrScanner.WORKER_PATH = './qr-scanner-worker.min.js'
 
@@ -33,8 +33,9 @@ export default {
   },
 
 	data(){return{
+    headers: ['Id', 'Name', 'Time'],
     students: {},
-    table: [['a','b'],['a','b'],['a','b'],['a','b'],['a','b'],['a','b'],['a','b'],['a','b'],['a','b'],['a','b'],['a','b'],['a','b'],['a','b'],['a','b'],['a','b'],['a','b'],['a','b'],['a','b'],['a','b'],['a','b'],['a','b'],['a','b'],['a','b'],['a','b'],['a','b'],['a','b'],['a','b'],['a','b']],
+    table: [],
 	}},
 
   methods: {
@@ -51,9 +52,35 @@ export default {
 
       if(this.students[inputs[1]]==undefined){
         this.students[inputs[1]]={"name": inputs[2]}
-        this.table.push([inputs[1], inputs[2]])
+        let d = new Date()
+        let timeString = d.toLocaleTimeString()
+        this.table.push([inputs[1], inputs[2], timeString])
       }
-    }
+    },
+
+    saveFile(){
+
+			let today = new Date()
+			let dayString = today.toISOString().substring(0, 10)
+
+      let csvFormat = this.buildStudentCSV()
+
+			let file = new File(csvFormat, `${dayString}簽到表.csv`, {type: "text/plain;charset=utf-8"})
+			FileSaver.saveAs(file)
+    },
+
+    buildStudentCSV(){
+      let csv = []
+
+      csv.push(this.headers.join(',')+'\n')
+
+      this.table.forEach(student => {
+        csv.push(student.join(',')+'\n')
+      })
+
+      return csv
+    },
+
   }
 
 }

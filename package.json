@@ -10,9 +10,11 @@
   "author": "yiz <ql3895619@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "file-saver": "^2.0.2",
     "parcel": "^1.12.4",
     "semantic-ui-offline": "^2.4.1-1",
     "vue": "^2.6.11",
+    "vue-hot-reload-api": "^2.3.4",
     "vue-qrcode-component": "^2.1.1"
   },
   "devDependencies": {
