@@ -10,6 +10,7 @@
       tbody
         tr(v-for='student in table')
           td(v-for='content in student') {{ content }}
+
   .item.button-container
     button.ui.button.massive(@click='cleanTable') 清除檔案
     button.ui.button.massive(@click='saveFile') 儲存檔案
@@ -37,7 +38,7 @@ export default {
   },
 
 	data(){return{
-    headers: ['Id', 'Name', 'Time'],
+    headers: ['Name', 'Id', 'Time'],
     students: {},
     table: [],
 	}},
@@ -110,8 +111,8 @@ body,#app
   flex-direction: column
 
 .item
-  margin: 2em
-  max-width: 600px
+  margin: 1em
+  max-width: 400px
 
 .scroll
   overflow: scroll
