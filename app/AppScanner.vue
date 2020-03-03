@@ -10,8 +10,9 @@
       tbody
         tr(v-for='student in table')
           td(v-for='content in student') {{ content }}
-
-  button.ui.button.massive.item(@click='saveFile') 儲存檔案
+  .item.button-container
+    button.ui.button.massive(@click='cleanTable') 清除檔案
+    button.ui.button.massive(@click='saveFile') 儲存檔案
 
 </template>
 
@@ -24,6 +25,9 @@ QrScanner.WORKER_PATH = './qr-scanner-worker.min.js'
 export default {
 
   mounted(){
+    if(localStorage.studentTable!=undefined)
+      this.table = JSON.parse(localStorage.studentTable)
+
     const video = document.getElementById('qr-video');
 
     const scanner = new QrScanner(video, content => this.addContent(content));
@@ -55,7 +59,13 @@ export default {
         let d = new Date()
         let timeString = d.toLocaleTimeString()
         this.table.push([inputs[1], inputs[2], timeString])
+        localStorage.studentTable = JSON.stringify(this.table)
       }
+    },
+
+    cleanTable(){
+      this.table = []
+      localStorage.removeItem('studentTable')
     },
 
     saveFile(){
@@ -105,6 +115,11 @@ body,#app
 
 .scroll
   overflow: scroll
+
+.button-container
+  width: 100%
+  display: flex
+  justify-content: space-around
 
 </style>
 <!--
