@@ -1,7 +1,9 @@
 <template lang="pug">
 #app.container
   video#qr-video.item(width='100%')
+
   p {{ scannerStatus }}
+
   #table.scroll.item
     table.ui.celled.table
       thead
@@ -52,31 +54,36 @@ export default {
   methods: {
     handleQRCode(qrcode) {
       // remove utf8-bom
-			if (qrcode.charCodeAt(0) === 0xFEFF) {
-				qrcode = qrcode.substr(1);
-			}
+      if (qrcode.charCodeAt(0) === 0xFEFF)
+        qrcode = qrcode.substr(1);
 
       let inputs = qrcode.split('/@/')
 
       if(inputs[0]!='qr-check'){
-        this.setScannerStatus('非合法QRcode', 1000)
+        this.setScannerStatus('非合法QRcode')
         return
       }
 
       let id = inputs[1].substring(0, 15)
       let name = inputs[2].substring(0, 15)
-      let timeString = new Date().toLocaleTimeString()
 
-      if(this.students[id]==undefined){
-        this.students[id]={"name": name}
-        this.table.push([name, id, timeString])
-        localStorage.studentTable = JSON.stringify(this.table)
-      }else{
-        this.setScannerStatus('已加入id:'+id, 1000)
-      }
+      this.addStudent(id, name)
     },
 
-    setScannerStatus(message, wait){
+    addStudent(id, name){
+      let timeString = new Date().toLocaleTimeString()
+
+      if(this.students[id]!=undefined){
+        this.setScannerStatus('已加入id:'+id)
+        return
+      }
+
+      this.students[id]={"name": name}
+      this.table.push([name, id, timeString])
+      localStorage.studentTable = JSON.stringify(this.table)
+    },
+
+    setScannerStatus(message, wait=500){
       this.scannerStatus = message
 
       if(this.timer!=null)
@@ -94,12 +101,14 @@ export default {
     },
 
     saveFile(){
-			let today = new Date()
-			let dayString = today.toISOString().substring(0, 10)
+			let dayString = new Date().toISOString().substring(0, 10)
 
       let csvFormat = this.buildStudentCSV()
+      let filename = `${dayString}簽到表.csv`
+      let type = "text/plain;charset=utf-8"
 
-			let file = new File(csvFormat, `${dayString}簽到表.csv`, {type: "text/plain;charset=utf-8"})
+			let file = new File(csvFormat, filename, {type: type})
+
 			FileSaver.saveAs(file)
     },
 
@@ -114,7 +123,6 @@ export default {
 
       return csv
     },
-
   }
 
 }
@@ -144,7 +152,6 @@ body,#app
   width: 100%
   display: flex
   justify-content: space-around
-
 </style>
 <!--
   vi:et:sw=2:ts=2

@@ -58,7 +58,6 @@ form
 
 .qrcode
   margin: 5em
-
 </style>
 
 <!--
