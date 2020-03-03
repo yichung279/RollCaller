@@ -80,6 +80,17 @@ export default {
       this.addStudent(id, name)
     },
 
+    setScannerStatus(message, wait=500){
+      this.scannerStatus = message
+
+      if(this.timer!=null)
+        window.clearTimeout(this.timer)
+
+      this.timer = window.setTimeout(()=>{
+        this.scannerStatus = "未發現 QRCode"
+      }, wait)
+    },
+
     addStudent(id, name){
       this.id = ""
       this.name = ""
@@ -95,17 +106,6 @@ export default {
       localStorage.studentTable = JSON.stringify(this.table)
     },
 
-    setScannerStatus(message, wait=500){
-      this.scannerStatus = message
-
-      if(this.timer!=null)
-        window.clearTimeout(this.timer)
-
-      this.timer = window.setTimeout(()=>{
-        this.scannerStatus = "未發現 QRCode"
-      }, wait)
-    },
-
     selectStudent(idx){
       this.selectedStudent = idx
       let tBody = document.getElementsByTagName('tbody')[0].children
@@ -115,12 +115,6 @@ export default {
       }
 
       tBody.item(idx).style.backgroundColor = 'whitesmoke'
-    },
-
-    clearTable(){
-      this.students = {}
-      this.table = []
-      localStorage.removeItem('studentTable')
     },
 
     clearStudent(){
@@ -133,6 +127,12 @@ export default {
       delete this.students[id]
       this.table.splice(idx, 1)
       localStorage.studentTable = JSON.stringify(this.table)
+    },
+
+    clearTable(){
+      this.students = {}
+      this.table = []
+      localStorage.removeItem('studentTable')
     },
 
     saveFile(){
