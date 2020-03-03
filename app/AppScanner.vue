@@ -1,8 +1,17 @@
 <template lang="pug">
 #app.container
-  video#qr-video.item(width='100%')
+  video#qr-video.item
 
   p {{ scannerStatus }}
+
+  .ui.form.item
+    .inline.fields
+      .field
+        input(type="text",placeholder="Name", v-model='name')
+      .field
+        input(type="text",placeholder="Id", v-model='id')
+      .field
+        .ui.submit.button(@click='addStudent(id, name)') Submit
 
   #table.scroll.item
     table.ui.celled.table
@@ -36,14 +45,13 @@ export default {
     })
 
     const video = document.getElementById('qr-video');
-
     const scanner = new QrScanner(video, qrcode => this.handleQRCode(qrcode));
     scanner.start();
-
-    document.getElementById('table').style.width = video.offsetWidth + 'px'
   },
 
 	data(){return{
+    id: "",
+    name: "",
     headers: ['Name', 'Id', 'Time'],
     students: {},
     table: [],
@@ -131,7 +139,7 @@ export default {
 <style lang="sass">
 body,#app
   height: 100%
-  overflow: hidden
+  //<!-- overflow: hidden -->
 </style>
 
 <style lang="sass" scoped>
@@ -140,18 +148,25 @@ body,#app
   display: flex
   align-items: center
   flex-direction: column
+  justify-content: space-around
 
 .item
-  margin: 1em
-  max-width: 400px
+  margin: 0.5em
+
+video
+  max-height: 200px
 
 .scroll
   overflow: scroll
 
+#table
+  width: 40em
+  flex-grow: 3
+
 .button-container
-  width: 100%
+  width: 30em
   display: flex
-  justify-content: space-around
+  justify-content: space-evenly
 </style>
 <!--
   vi:et:sw=2:ts=2
