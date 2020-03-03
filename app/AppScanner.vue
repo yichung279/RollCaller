@@ -1,7 +1,7 @@
 <template lang="pug">
 #app.container
   video#qr-video.item(width='100%')
-
+  p {{ scannerStatus }}
   #table.scroll.item
     table.ui.celled.table
       thead
@@ -9,11 +9,11 @@
           th(v-for='header in headers') {{ header }}
       tbody
         tr(v-for='student in table')
-          td(v-for='content in student') {{ content.substring(0, 15) }}
+          td(v-for='content in student') {{ content }}
 
   .item.button-container
-    button.ui.button.massive(@click='cleanTable') 清除檔案
-    button.ui.button.massive(@click='saveFile') 儲存檔案
+    button.ui.button.large(@click='cleanTable') 清除檔案
+    button.ui.button.large(@click='saveFile') 儲存檔案
 
 </template>
 
@@ -29,9 +29,13 @@ export default {
     if(localStorage.studentTable!=undefined)
       this.table = JSON.parse(localStorage.studentTable)
 
+    this.table.forEach(row=>{
+      this.students[row[1]] = row[0]
+    })
+
     const video = document.getElementById('qr-video');
 
-    const scanner = new QrScanner(video, content => this.addContent(content));
+    const scanner = new QrScanner(video, qrcode => this.handleQRCode(qrcode));
     scanner.start();
 
     document.getElementById('table').style.width = video.offsetWidth + 'px'
@@ -41,36 +45,55 @@ export default {
     headers: ['Name', 'Id', 'Time'],
     students: {},
     table: [],
+    scannerStatus: "未發現 QRCode",
+    timer: null,
 	}},
 
   methods: {
-    addContent(content) {
+    handleQRCode(qrcode) {
       // remove utf8-bom
-			if (content.charCodeAt(0) === 0xFEFF) {
-				content = content.substr(1);
+			if (qrcode.charCodeAt(0) === 0xFEFF) {
+				qrcode = qrcode.substr(1);
 			}
 
-      let inputs = content.split('/@/')
+      let inputs = qrcode.split('/@/')
 
-      if(inputs[0]!='qr-check')
+      if(inputs[0]!='qr-check'){
+        this.setScannerStatus('非合法QRcode', 1000)
         return
+      }
 
-      if(this.students[inputs[1]]==undefined){
-        this.students[inputs[1]]={"name": inputs[2]}
-        let d = new Date()
-        let timeString = d.toLocaleTimeString()
-        this.table.push([inputs[1], inputs[2], timeString])
+      let id = inputs[1].substring(0, 15)
+      let name = inputs[2].substring(0, 15)
+      let timeString = new Date().toLocaleTimeString()
+
+      if(this.students[id]==undefined){
+        this.students[id]={"name": name}
+        this.table.push([name, id, timeString])
         localStorage.studentTable = JSON.stringify(this.table)
+      }else{
+        this.setScannerStatus('已加入id:'+id, 1000)
       }
     },
 
+    setScannerStatus(message, wait){
+      this.scannerStatus = message
+
+      if(this.timer!=null)
+        window.clearTimeout(this.timer)
+
+      this.timer = window.setTimeout(()=>{
+        this.scannerStatus = "未發現 QRCode"
+      }, wait)
+    },
+
     cleanTable(){
+      this.students = {}
       this.table = []
       localStorage.removeItem('studentTable')
     },
 
     saveFile(){
-
 			let today = new Date()
 			let dayString = today.toISOString().substring(0, 10)
 
