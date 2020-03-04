@@ -92,18 +92,27 @@ export default {
     },
 
     addStudent(id, name){
-      this.id = ""
-      this.name = ""
-      let timeString = new Date().toLocaleTimeString()
-
-      if(this.students[id]!=undefined){
-        this.setScannerStatus('已加入id:'+id)
+      if(id == '' || name == ''){
+        this.setScannerStatus('請輸入姓名, Id')
         return
       }
+
+      id = id.replace(',', '_')
+      name = name.replace(',', '_')
+
+      this.setScannerStatus('已加入id:' + id)
+
+      if(this.students[id]!=undefined)
+        return
+
+      let timeString = new Date().toLocaleTimeString()
 
       this.students[id]={"name": name}
       this.table.push([name, id, timeString])
       localStorage.studentTable = JSON.stringify(this.table)
+
+      this.id = ""
+      this.name = ""
     },
 
     selectStudent(idx){
@@ -150,10 +159,10 @@ export default {
     buildStudentCSV(){
       let csv = []
 
-      csv.push(this.headers.join(',')+'\n')
+      csv.push(this.headers.join(',')+'\r')
 
       this.table.forEach(student => {
-        csv.push(student.join(',')+'\n')
+        csv.push(student.join(',')+'\r')
       })
 
       return csv
